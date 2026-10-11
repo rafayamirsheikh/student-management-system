@@ -88,10 +88,14 @@ mongoose
   .then(() => {
     console.log("MongoDB Connected Successfully!");
 
-    app.listen(process.env.PORT || 5000, () => {
-      console.log("Server running on port 5000");
-    });
+    if (process.env.VERCEL !== "1") {
+      app.listen(process.env.PORT || 5000, () => {
+        console.log("Server running on port 5000");
+      });
+    }
   })
   .catch((error) => {
     console.error("MongoDB Error:", error.message);
   });
+
+module.exports = app;
