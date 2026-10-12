@@ -83,23 +83,37 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   async function handleDelete(id) {
-    if (!window.confirm("Kya tum is student ko delete karna chahte ho?")) {
-      return;
-    }
-    try {
-      const response = await fetch(`${API}/${id}`, { method: "DELETE" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Delete nahi hua");
-      setMessage("Student delete ho gaya!");
-      if (editingId === id) {
-        setEditingId(null);
-        setForm(emptyForm);
-      }
-      await fetchStudents();
-    } catch (error) {
-      setMessage(error.message || "Delete karte waqt error aya.");
-    }
+  if (!window.confirm("Kya tum is student ko delete karna chahte ho?")) {
+    return;
   }
+  try {
+    const response = await fetch(`${API}/${id}`, {
+      method: "DELETE",
+    });
+    console.log("DELETE URL:", `${API}/${id}`);
+    console.log ("DELETE STATUS:", response.status);
+    const text = await response.text();
+    let result = {};
+    try {
+      result = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "Server DELETE request accept nahi kar raha. Vercel API route check karna hoga."
+      );
+    }
+    if (!response.ok) {
+      throw new Error(result.message || "Delete nahi hua");
+    }
+    setMessage("Student delete ho gaya!");
+    if (editingId === id) {
+      setEditingId(null);
+      setForm(emptyForm);
+    }
+    await fetchStudents();
+  } catch (error) {
+    setMessage(error.message || "Delete karte waqt error aya.");
+  }
+}
   function cancelEdit() {
     setEditingId(null);
     setForm(emptyForm);
