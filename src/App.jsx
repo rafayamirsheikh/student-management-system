@@ -90,8 +90,8 @@ function App() {
     const response = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
-    console.log("DELETE URL:", `${API}/${id}`);
-    console.log ("DELETE STATUS:", response.status);
+     console.log("DELETE URL:", `${API}/${id}`);
+     console.log ("DELETE STATUS:", response.status);
     const text = await response.text();
     let result = {};
     try {
