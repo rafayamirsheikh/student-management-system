@@ -86,39 +86,40 @@ function App() {
   if (!window.confirm("Kya tum is student ko delete karna chahte ho?")) {
     return;
   }
+
   try {
     const response = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
-     console.log("DELETE URL:", `${API}/${id}`);
-     console.log ("DELETE STATUS:", response.status);
+
     const text = await response.text();
+    console.log("DELETE URL:", `${API}/${id}`);
+    console.log("DELETE STATUS:", response.status);
+    console.log("DELETE RESPONSE:", text);
+
     let result = {};
     try {
       result = JSON.parse(text);
     } catch {
-      throw new Error(
-        "Server DELETE request accept nahi kar raha. Vercel API route check karna hoga."
-      );
+      throw new Error("Server ne JSON ke bajaye text bheja: " + text.slice(0, 100));
     }
+
     if (!response.ok) {
       throw new Error(result.message || "Delete nahi hua");
     }
+
     setMessage("Student delete ho gaya!");
+
     if (editingId === id) {
       setEditingId(null);
       setForm(emptyForm);
     }
+
     await fetchStudents();
   } catch (error) {
     setMessage(error.message || "Delete karte waqt error aya.");
   }
 }
-  function cancelEdit() {
-    setEditingId(null);
-    setForm(emptyForm);
-    setMessage("");
-  }
   return (
     <main className="app">
       <header className="hero">
